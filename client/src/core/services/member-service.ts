@@ -10,9 +10,7 @@ import { PaginatedResult } from '../../types/pagination';
 })
 export class MemberService {
   private http = inject(HttpClient);
-
   private baseUrl = environment.apiUrl;
-
   editMode = signal(false);
   member = signal<Member | null>(null);
 
