@@ -30,7 +30,8 @@ public class MembersController(IUnitOfWork unitOfWork, IPhotoService photoServic
     [HttpGet("{id}/photos")]
     public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
     {
-        return Ok(await unitOfWork.MemberRepository.GetPhotosForMemberAsync(id));
+        var isCurrentUser = User.GetMemberId() == id;
+        return Ok(await unitOfWork.MemberRepository.GetPhotosForMemberAsync(id, isCurrentUser));
     }
 
     [HttpPut]
@@ -71,12 +72,6 @@ public class MembersController(IUnitOfWork unitOfWork, IPhotoService photoServic
             PublicId = result.PublicId,
             MemberId = User.GetMemberId()
         };
-
-        if (member.ImageUrl is null)
-        {
-            member.ImageUrl = photo.Url;
-            member.User.ImageUrl = photo.Url;
-        }
 
         member.Photos.Add(photo);
 
